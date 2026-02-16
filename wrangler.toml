@@ -1,0 +1,7 @@
+name = "music-ministry-platform"
+compatibility_date = "2026-02-16"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "music_ministry_db"
+database_id = "1f3a3c33-7b92-4df9-a631-a8c3cb8d5dc0"
