@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Submit - Music Ministry</title>
+</head>
+<body>
+  <h1>Test Submit</h1>
+  <p>This sends a sample evaluation to <code>/api/evaluation</code>.</p>
+  <button id="btn">Send Test Evaluation</button>
+  <pre id="out"></pre>
+
+  <script>
+    const out = document.getElementById("out");
+    document.getElementById("btn").addEventListener("click", async () => {
+      out.textContent = "Sending...";
+      const payload = {
+        service_date: new Date().toISOString().slice(0, 10),
+        service_name: "Test Service",
+        evaluator_name: "Test",
+
+        v1: "Yes", v2: "Yes", v3: "Not sure", v4: "Yes",
+        v5: "No",  v6: "Yes", v7: "Yes",     v8: "Yes",
+
+        i1: "Yes", i2: "Not sure", i3: "Yes", i4: "Yes",
+
+        s1: "Yes", s2: "Yes", s3: "Not sure",
+
+        what_went_well: "Test went well.",
+        areas_to_improve: "Testing only.",
+        suggestions_next_service: "Keep building."
+      };
+
+      try {
+        const res = await fetch("/api/evaluation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json().catch(() => ({}));
+        out.textContent = "HTTP " + res.status + "\n" + JSON.stringify(data, null, 2);
+      } catch (e) {
+        out.textContent = "Request failed: " + e.message;
+      }
+    });
+  </script>
+</body>
+</html>
