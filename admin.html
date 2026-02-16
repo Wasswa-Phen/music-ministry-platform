@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin | Music Ministry Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background:#0b0f1a; color:#e8ecff; }
+    header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; background:#0b0f1a; }
+    main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; padding: 14px; margin: 12px 0; }
+    input { width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.25); color: #e8ecff; padding: 10px; }
+    button { border:0; border-radius: 12px; padding: 12px 14px; background:#4B2BFF; color:#fff; font-weight:700; cursor:pointer; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { border-bottom: 1px solid rgba(255,255,255,0.10); padding: 10px; text-align: left; vertical-align: top; }
+    th { opacity: 0.9; }
+    .muted { opacity: 0.8; font-size: 12px; }
+    .error { color: #ff7d7d; }
+  </style>
+</head>
+<body>
+  <header>
+    <div><strong>Admin • Latest Evaluations</strong></div>
+    <div class="muted">Enter token → Load latest 20 records.</div>
+  </header>
+
+  <main>
+    <div class="card">
+      <label for="token">Admin Token</label>
+      <input id="token" placeholder="MC_Kasenge_2026_Admin_91!" />
+      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button id="loadBtn">Load</button>
+        <span id="status" class="muted"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Tip: Don’t share this page link with the token filled in. Keep it manual.</div>
+    </div>
+
+    <div class="card">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>When</th>
+            <th>Service</th>
+            <th>Evaluator</th>
+            <th>Highlights / Issues</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const rowsEl = document.getElementById("rows");
+
+    function shortText(t) {
+      t = (t || "").trim();
+      if (!t) return "";
+      return t.length > 120 ? (t.slice(0, 120) + "…") : t;
+    }
+
+    document.getElementById("loadBtn").addEventListener("click", async () => {
+      const token = document.getElementById("token").value.trim();
+      if (!token) {
+        statusEl.textContent = "Token required.";
+        statusEl.className = "muted error";
+        return;
+      }
+
+      statusEl.className = "muted";
+      statusEl.textContent = "Loading...";
+      rowsEl.innerHTML = "";
+
+      try {
+        const res = await fetch(`/api/admin/latest?token=${encodeURIComponent(token)}`);
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok || !data.ok) {
+          statusEl.className = "muted error";
+          statusEl.textContent = data.error || ("HTTP " + res.status);
+          return;
+        }
+
+        const rows = data.rows || [];
+        statusEl.textContent = `Loaded ${rows.length} record(s).`;
+
+        rowsEl.innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.id}</td>
+            <td>
+              <div>${r.service_date || ""}</div>
+              <div class="muted">${r.created_at || ""}</div>
+            </td>
+            <td>${(r.service_name || "").trim() || "<span class='muted'>—</span>"}</td>
+            <td>${(r.evaluator_name || "").trim() || "<span class='muted'>—</span>"}</td>
+            <td>
+              <div><strong>Well:</strong> ${shortText(r.what_went_well)}</div>
+              <div class="muted"><strong>Improve:</strong> ${shortText(r.areas_to_improve)}</div>
+              <div class="muted"><strong>Next:</strong> ${shortText(r.suggestions_next_service)}</div>
+            </td>
+          </tr>
+        `).join("");
+      } catch (e) {
+        statusEl.className = "muted error";
+        statusEl.textContent = "Network error.";
+      }
+    });
+  </script>
+</body>
+</html>
