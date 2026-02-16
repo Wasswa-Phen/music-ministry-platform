@@ -58,7 +58,7 @@ export async function onRequestPost(ctx) {
   try {
     const result = await stmt.run();
     return new Response(JSON.stringify({ ok: true, id: result.meta?.last_row_id ?? null }), { status: 200, headers });
-  } catch (e) {
+  } catch {
     return new Response(JSON.stringify({ ok: false, error: "DB insert failed" }), { status: 500, headers });
   }
 }
