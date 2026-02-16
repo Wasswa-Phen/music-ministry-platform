@@ -9,33 +9,94 @@
     header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; background:#0b0f1a; }
     main { max-width: 1100px; margin: 0 auto; padding: 16px; }
     .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; padding: 14px; margin: 12px 0; }
-    input { width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.25); color: #e8ecff; padding: 10px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 820px) { .grid.two { grid-template-columns: 1fr 1fr; } .grid.three { grid-template-columns: 1fr 1fr 1fr; } }
+    label { display:block; font-size: 12px; opacity: 0.85; margin-bottom: 6px; }
+    input, select { width: 100%; box-sizing: border-box; border-radius: 10px; border: 1px solid rgba(255,255,255,0.18); background: rgba(0,0,0,0.25); color: #e8ecff; padding: 10px; }
     button { border:0; border-radius: 12px; padding: 12px 14px; background:#4B2BFF; color:#fff; font-weight:700; cursor:pointer; }
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { border-bottom: 1px solid rgba(255,255,255,0.10); padding: 10px; text-align: left; vertical-align: top; }
     th { opacity: 0.9; }
     .muted { opacity: 0.8; font-size: 12px; }
     .error { color: #ff7d7d; }
+    .ok { color: #7dffb5; }
+    .kpi { font-size: 26px; font-weight: 800; margin-top: 6px; }
+    .pill { display:inline-block; padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.06); font-size: 12px; opacity: 0.9; }
   </style>
 </head>
 <body>
   <header>
-    <div><strong>Admin • Latest Evaluations</strong></div>
-    <div class="muted">Enter token → Load latest 20 records.</div>
+    <div><strong>Admin • Evaluations</strong></div>
+    <div class="muted">Token-gated admin view + weekly summary + KPI scoring + filters.</div>
   </header>
 
   <main>
     <div class="card">
-      <label for="token">Admin Token</label>
-      <input id="token" placeholder="MC_Kasenge_2026_Admin_91!" />
-      <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button id="loadBtn">Load</button>
+      <div class="grid two">
+        <div>
+          <label for="token">Admin Token</label>
+          <input id="token" placeholder="Paste ADMIN_TOKEN value (keep private)" />
+        </div>
+        <div>
+          <label for="limit">Rows limit</label>
+          <input id="limit" value="50" />
+        </div>
+      </div>
+
+      <div class="grid three" style="margin-top:12px;">
+        <div>
+          <label for="from">From (service date)</label>
+          <input id="from" type="date" />
+        </div>
+        <div>
+          <label for="to">To (service date)</label>
+          <input id="to" type="date" />
+        </div>
+        <div>
+          <label for="service">Service name (optional exact match)</label>
+          <input id="service" placeholder="English Service / Luganda Service / Youth..." />
+        </div>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+        <button id="loadBtn">Load Summary + Records</button>
         <span id="status" class="muted"></span>
+      </div>
+
+      <div class="muted" style="margin-top:10px;">
+        Tip: Keep token manual. Don’t share links with token in the URL.
       </div>
     </div>
 
     <div class="card">
-      <div class="muted">Tip: Don’t share this page link with the token filled in. Keep it manual.</div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;">
+        <div>
+          <div class="muted">Selected window</div>
+          <div id="windowText" class="pill">All records</div>
+        </div>
+        <div>
+          <div class="muted">Submissions</div>
+          <div id="submissions" class="kpi">—</div>
+        </div>
+      </div>
+
+      <div class="grid three" style="margin-top:12px;">
+        <div class="card" style="margin:0;">
+          <div class="muted">Vocalists KPI</div>
+          <div id="kpiV" class="kpi">—</div>
+          <div class="muted" id="countsV">—</div>
+        </div>
+        <div class="card" style="margin:0;">
+          <div class="muted">Instrumentalists KPI</div>
+          <div id="kpiI" class="kpi">—</div>
+          <div class="muted" id="countsI">—</div>
+        </div>
+        <div class="card" style="margin:0;">
+          <div class="muted">Sound KPI</div>
+          <div id="kpiS" class="kpi">—</div>
+          <div class="muted" id="countsS">—</div>
+        </div>
+      </div>
     </div>
 
     <div class="card">
@@ -58,36 +119,105 @@
     const statusEl = document.getElementById("status");
     const rowsEl = document.getElementById("rows");
 
+    const windowText = document.getElementById("windowText");
+    const submissionsEl = document.getElementById("submissions");
+
+    const kpiV = document.getElementById("kpiV");
+    const kpiI = document.getElementById("kpiI");
+    const kpiS = document.getElementById("kpiS");
+
+    const countsV = document.getElementById("countsV");
+    const countsI = document.getElementById("countsI");
+    const countsS = document.getElementById("countsS");
+
     function shortText(t) {
       t = (t || "").trim();
       if (!t) return "";
       return t.length > 120 ? (t.slice(0, 120) + "…") : t;
     }
 
-    document.getElementById("loadBtn").addEventListener("click", async () => {
+    function fmtKpi(val) {
+      return (val === null || val === undefined) ? "—" : (val + "%");
+    }
+
+    function setCounts(el, obj) {
+      el.textContent = `Yes: ${obj.yes} • No: ${obj.no} • Not sure: ${obj.not_sure}`;
+    }
+
+    function buildParams() {
       const token = document.getElementById("token").value.trim();
-      if (!token) {
-        statusEl.textContent = "Token required.";
+      const from = document.getElementById("from").value.trim();
+      const to = document.getElementById("to").value.trim();
+      const service = document.getElementById("service").value.trim();
+      const limit = document.getElementById("limit").value.trim();
+
+      if (!token) return { error: "Token required." };
+
+      const p = new URLSearchParams();
+      p.set("token", token);
+      if (from) p.set("from", from);
+      if (to) p.set("to", to);
+      if (service) p.set("service", service);
+      if (limit) p.set("limit", limit);
+      return { p, token, from, to, service };
+    }
+
+    function setWindowText(from, to, service) {
+      const parts = [];
+      if (from) parts.push(`From ${from}`);
+      if (to) parts.push(`To ${to}`);
+      if (service) parts.push(`Service: ${service}`);
+      windowText.textContent = parts.length ? parts.join(" • ") : "All records";
+    }
+
+    document.getElementById("loadBtn").addEventListener("click", async () => {
+      const built = buildParams();
+      if (built.error) {
+        statusEl.textContent = built.error;
         statusEl.className = "muted error";
         return;
       }
 
+      const { p, from, to, service } = built;
+
       statusEl.className = "muted";
-      statusEl.textContent = "Loading...";
+      statusEl.textContent = "Loading summary...";
       rowsEl.innerHTML = "";
 
-      try {
-        const res = await fetch(`/api/admin/latest?token=${encodeURIComponent(token)}`);
-        const data = await res.json().catch(() => ({}));
+      setWindowText(from, to, service);
 
-        if (!res.ok || !data.ok) {
+      try {
+        // 1) Summary (counts + KPI)
+        const sumRes = await fetch(`/api/admin/summary?${p.toString()}`);
+        const sum = await sumRes.json().catch(() => ({}));
+        if (!sumRes.ok || !sum.ok) {
           statusEl.className = "muted error";
-          statusEl.textContent = data.error || ("HTTP " + res.status);
+          statusEl.textContent = sum.error || ("Summary HTTP " + sumRes.status);
           return;
         }
 
-        const rows = data.rows || [];
-        statusEl.textContent = `Loaded ${rows.length} record(s).`;
+        submissionsEl.textContent = sum.submissions ?? "0";
+        kpiV.textContent = fmtKpi(sum.kpi.vocalists_score);
+        kpiI.textContent = fmtKpi(sum.kpi.instrumentalists_score);
+        kpiS.textContent = fmtKpi(sum.kpi.sound_score);
+
+        setCounts(countsV, sum.counts.vocalists);
+        setCounts(countsI, sum.counts.instrumentalists);
+        setCounts(countsS, sum.counts.sound);
+
+        // 2) Latest rows (filtered)
+        statusEl.textContent = "Loading records...";
+        const latestRes = await fetch(`/api/admin/latest?${p.toString()}`);
+        const latest = await latestRes.json().catch(() => ({}));
+        if (!latestRes.ok || !latest.ok) {
+          statusEl.className = "muted error";
+          statusEl.textContent = latest.error || ("Latest HTTP " + latestRes.status);
+          return;
+        }
+
+        const rows = latest.rows || [];
+        statusEl.className = "muted ok";
+        statusEl.textContent = `Loaded summary + ${rows.length} record(s).`;
 
         rowsEl.innerHTML = rows.map(r => `
           <tr>
@@ -105,6 +235,7 @@
             </td>
           </tr>
         `).join("");
+
       } catch (e) {
         statusEl.className = "muted error";
         statusEl.textContent = "Network error.";
