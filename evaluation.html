@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sunday Music Evaluation | Music Ministry Platform</title>
+  <meta name="description" content="Sunday Music Department evaluation form for continuous improvement in vocalists, instrumentalists, and sound team." />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #0b0f1a; color: #e8ecff; }
+    header { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); background: #0b0f1a; position: sticky; top: 0; }
+    header h1 { margin: 0; font-size: 18px; }
+    header p { margin: 6px 0 0; font-size: 13px; opacity: 0.85; }
+
+    main { max-width: 920px; margin: 0 auto; padding: 16px; }
+    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; padding: 14px; margin: 12px 0; }
+    .card h2 { margin: 0 0 10px; font-size: 16px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 760px) { .grid.two { grid-template-columns: 1fr 1fr; } }
+
+    label { display: block; font-size: 13px; margin-bottom: 6px; opacity: 0.95; }
+    input, select, textarea {
+      width: 100%; box-sizing: border-box; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(0,0,0,0.25); color: #e8ecff;
+      padding: 10px; outline: none;
+    }
+    textarea { min-height: 90px; resize: vertical; }
+
+    .q { padding: 10px; border-radius: 12px; background: rgba(0,0,0,0.20); border: 1px solid rgba(255,255,255,0.08); }
+    .q p { margin: 0 0 10px; font-size: 14px; line-height: 1.35; }
+    .opts { display: flex; gap: 10px; flex-wrap: wrap; }
+    .opt {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 10px; border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.06);
+      cursor: pointer; user-select: none;
+    }
+    .opt input { width: auto; }
+    .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    button {
+      border: 0; border-radius: 12px; padding: 12px 14px;
+      background: #4B2BFF; color: white; font-weight: 700;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .status { font-size: 13px; opacity: 0.9; }
+    .success { color: #7dffb5; }
+    .error { color: #ff7d7d; }
+    footer { padding: 18px 16px; font-size: 12px; opacity: 0.75; text-align: center; }
+    a { color: #b9c3ff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Sunday Music Department Evaluation</h1>
+    <p>Tick appropriately. This supports growth, excellence, and consistent worship flow.</p>
+  </header>
+
+  <main>
+    <form id="evalForm" class="card">
+      <h2>Service Details</h2>
+      <div class="grid two">
+        <div>
+          <label for="service_date">Service Date</label>
+          <input id="service_date" name="service_date" type="date" required />
+        </div>
+        <div>
+          <label for="service_name">Service Name (optional)</label>
+          <input id="service_name" name="service_name" placeholder="English Service / Luganda Service / Youth Service..." />
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <label for="evaluator_name">Evaluator Name (optional)</label>
+        <input id="evaluator_name" name="evaluator_name" placeholder="Name (optional)" />
+      </div>
+    </form>
+
+    <section class="card">
+      <h2>Vocalists Section</h2>
+
+      <div class="q">
+        <p>1. All the vocalists arrived on time (08:00am).</p>
+        <div class="opts" data-q="v1"></div>
+      </div>
+
+      <div class="q">
+        <p>2. The vocalists were smartly dressed and kept the pulpit clean.</p>
+        <div class="opts" data-q="v2"></div>
+      </div>
+
+      <div class="q">
+        <p>3. The leader of praise knew very well the songs and rightly sang on the given key.</p>
+        <div class="opts" data-q="v3"></div>
+      </div>
+
+      <div class="q">
+        <p>4. The backup sounded well with clear harmonies and melodies and knew the lyrics well.</p>
+        <div class="opts" data-q="v4"></div>
+      </div>
+
+      <div class="q">
+        <p>5. The dance movements on the stage were uniform and well organized.</p>
+        <div class="opts" data-q="v5"></div>
+      </div>
+
+      <div class="q">
+        <p>6. The songs chosen were in line with our monthly theme.</p>
+        <div class="opts" data-q="v6"></div>
+      </div>
+
+      <div class="q">
+        <p>7. The worship leader led well, knew the songs, and maintained right melodies and lyrics.</p>
+        <div class="opts" data-q="v7"></div>
+      </div>
+
+      <div class="q">
+        <p>8. People organized themselves well on stage (stage uniformity).</p>
+        <div class="opts" data-q="v8"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Instrumentalists Section</h2>
+
+      <div class="q">
+        <p>1. Instrumentalists arrived on time.</p>
+        <div class="opts" data-q="i1"></div>
+      </div>
+
+      <div class="q">
+        <p>2. Instrumentalists were smartly dressed in the uniform communicated.</p>
+        <div class="opts" data-q="i2"></div>
+      </div>
+
+      <div class="q">
+        <p>3. The instrumentalists played all songs well as expected.</p>
+        <div class="opts" data-q="i3"></div>
+      </div>
+
+      <div class="q">
+        <p>4. They coordinated well among themselves.</p>
+        <div class="opts" data-q="i4"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Sound System / Technical</h2>
+
+      <div class="q">
+        <p>1. The sound was appropriate and good.</p>
+        <div class="opts" data-q="s1"></div>
+      </div>
+
+      <div class="q">
+        <p>2. All microphones were on and projected the anticipated sound.</p>
+        <div class="opts" data-q="s2"></div>
+      </div>
+
+      <div class="q">
+        <p>3. The singers respected the in-ear monitors and correctly used them.</p>
+        <div class="opts" data-q="s3"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Comments</h2>
+      <div class="grid">
+        <div>
+          <label for="what_went_well">What went well</label>
+          <textarea id="what_went_well" placeholder="Highlights, strengths, positive moments..."></textarea>
+        </div>
+        <div>
+          <label for="areas_to_improve">Areas to improve</label>
+          <textarea id="areas_to_improve" placeholder="Gaps, issues, what needs attention..."></textarea>
+        </div>
+        <div>
+          <label for="suggestions_next_service">Suggestions for next service</label>
+          <textarea id="suggestions_next_service" placeholder="Action steps, training needs, planning notes..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="actions">
+        <button id="submitBtn" type="button">Submit Evaluation</button>
+        <span id="status" class="status"></span>
+      </div>
+      <p class="status">Tip: Use “Not sure” when you couldn’t observe clearly. The goal is improvement, not blame.</p>
+    </section>
+
+    <footer>
+      Music Ministry Platform • MVP • Built for continuous growth and Kingdom excellence.
+    </footer>
+  </main>
+
+  <script>
+    const CHOICES = ["Yes", "No", "Not sure"];
+
+    function renderChoices() {
+      document.querySelectorAll(".opts").forEach((wrap) => {
+        const key = wrap.getAttribute("data-q");
+        wrap.innerHTML = CHOICES.map((c) => {
+          const id = `${key}_${c.replace(/\s/g,'_')}`;
+          return `
+            <label class="opt" for="${id}">
+              <input type="radio" id="${id}" name="${key}" value="${c}" />
+              ${c}
+            </label>
+          `;
+        }).join("");
+      });
+    }
+
+    function getRadioValue(name) {
+      const el = document.querySelector(`input[name="${name}"]:checked`);
+      return el ? el.value : "Not sure";
+    }
+
+    function todayISO() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    renderChoices();
+    document.getElementById("service_date").value = todayISO();
+
+    const submitBtn = document.getElementById("submitBtn");
+    const statusEl = document.getElementById("status");
+
+    submitBtn.addEventListener("click", async () => {
+      statusEl.className = "status";
+      statusEl.textContent = "Submitting...";
+      submitBtn.disabled = true;
+
+      const payload = {
+        service_date: document.getElementById("service_date").value,
+        service_name: document.getElementById("service_name").value.trim(),
+        evaluator_name: document.getElementById("evaluator_name").value.trim(),
+
+        v1: getRadioValue("v1"),
+        v2: getRadioValue("v2"),
+        v3: getRadioValue("v3"),
+        v4: getRadioValue("v4"),
+        v5: getRadioValue("v5"),
+        v6: getRadioValue("v6"),
+        v7: getRadioValue("v7"),
+        v8: getRadioValue("v8"),
+
+        i1: getRadioValue("i1"),
+        i2: getRadioValue("i2"),
+        i3: getRadioValue("i3"),
+        i4: getRadioValue("i4"),
+
+        s1: getRadioValue("s1"),
+        s2: getRadioValue("s2"),
+        s3: getRadioValue("s3"),
+
+        what_went_well: document.getElementById("what_went_well").value.trim(),
+        areas_to_improve: document.getElementById("areas_to_improve").value.trim(),
+        suggestions_next_service: document.getElementById("suggestions_next_service").value.trim(),
+      };
+
+      try {
+        const res = await fetch("/api/evaluation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.ok) {
+          statusEl.classList.add("success");
+          statusEl.textContent = `Saved ✅ (ID: ${data.id})`;
+
+          // Optional: reset radios
+          document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+        } else {
+          statusEl.classList.add("error");
+          statusEl.textContent = `Failed ❌ ${data.error || ("HTTP " + res.status)}`;
+        }
+      } catch (e) {
+        statusEl.classList.add("error");
+        statusEl.textContent = "Network error ❌";
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
