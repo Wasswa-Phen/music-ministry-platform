@@ -21,7 +21,6 @@
       --shadow: 0 18px 50px rgba(0,0,0,.45);
       --radius: 18px;
     }
-
     *{box-sizing:border-box}
     body{
       margin:0;
@@ -35,11 +34,9 @@
       overflow-x:hidden;
     }
     a{color:inherit; text-decoration:none}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;}
+    .wrap{max-width:1100px; margin:0 auto; padding:20px 16px 96px;}
 
-    .wrap{max-width:1100px; margin:0 auto; padding:20px 16px 90px;}
-
-    /* Top bar */
+    /* Topbar */
     .topbar{
       display:flex; align-items:center; justify-content:space-between;
       padding:12px 14px;
@@ -47,7 +44,7 @@
       border-radius:16px;
       background:rgba(0,0,0,.25);
       backdrop-filter: blur(10px);
-      position: sticky; top: 10px; z-index: 10;
+      position: sticky; top: 10px; z-index: 20;
     }
     .brand{display:flex; gap:10px; align-items:center;}
     .logo{
@@ -64,8 +61,8 @@
     }
     .brand h1{margin:0; font-size:14px; letter-spacing:.2px}
     .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
-    .navlinks{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
 
+    .nav{display:flex; gap:10px; align-items:center;}
     .btn{
       display:inline-flex; align-items:center; justify-content:center;
       padding:10px 12px;
@@ -83,8 +80,46 @@
       border-color: rgba(255,255,255,.18);
       box-shadow: 0 18px 40px rgba(75,43,255,.22);
     }
+    .btnTiny{padding:9px 10px; font-size:12px;}
 
-    /* Header */
+    /* Mobile menu */
+    .hamburger{
+      display:none;
+      width:44px; height:40px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      cursor:pointer;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      flex-direction:column;
+    }
+    .hamburger span{
+      width:18px; height:2px;
+      background: rgba(234,240,255,.85);
+      border-radius:2px;
+      display:block;
+    }
+    .menuPanel{
+      display:none;
+      margin-top:10px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      background:rgba(0,0,0,.35);
+      backdrop-filter: blur(12px);
+      padding:10px;
+    }
+    .menuPanel a{width:100%;}
+    .menuPanel .btn{width:100%;}
+
+    @media (max-width: 720px){
+      .nav{display:none;}
+      .hamburger{display:flex;}
+      .menuPanel.show{display:block;}
+    }
+
+    /* Hero */
     .hero{
       margin-top:16px;
       border:1px solid var(--stroke);
@@ -126,7 +161,7 @@
       color:var(--muted);
       font-size:13px;
       line-height:1.65;
-      max-width: 70ch;
+      max-width: 75ch;
     }
 
     /* Layout */
@@ -168,11 +203,7 @@
       background: rgba(255,255,255,.04);
       margin:10px 0;
     }
-    .q p{
-      margin:0 0 10px;
-      font-size:13px;
-      line-height:1.5;
-    }
+    .q p{margin:0 0 10px; font-size:13px; line-height:1.5;}
 
     .opts{display:flex; gap:10px; flex-wrap:wrap;}
     .opt{
@@ -186,7 +217,7 @@
     }
     .opt input{width:auto; margin:0}
 
-    /* Sticky submit bar (mobile-first) */
+    /* Sticky submit bar */
     .submitBar{
       position:fixed;
       left:0; right:0; bottom:0;
@@ -194,6 +225,7 @@
       background: rgba(0,0,0,.50);
       border-top: 1px solid rgba(255,255,255,.10);
       backdrop-filter: blur(12px);
+      z-index: 30;
     }
     .submitInner{
       max-width:1100px;
@@ -208,7 +240,6 @@
     .status.ok{color:var(--ok);}
     .status.bad{color:var(--bad);}
     .rightActions{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
-    .btnTiny{padding:9px 10px; font-size:12px;}
 
     footer{
       margin-top:14px;
@@ -235,24 +266,37 @@
           <p>Alimunze • Kasenge Miracle Centre Church</p>
         </div>
       </div>
-      <div class="navlinks">
+
+      <div class="nav">
         <a class="btn btnTiny" href="/">Home</a>
         <a class="btn btnTiny" href="/admin.html">Admin</a>
+        <a class="btn btnPrimary btnTiny" href="/evaluation.html">Evaluation</a>
       </div>
+
+      <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="menuPanel" id="menuPanel">
+      <a class="btn btnTiny" href="/">Home</a>
+      <a class="btn btnTiny" href="/admin.html">Admin</a>
+      <a class="btn btnPrimary btnTiny" href="/evaluation.html">Evaluation</a>
     </div>
 
     <section class="hero">
       <span class="kicker">Capture • Review • Improve</span>
       <h2 class="headline">Sunday Music Department Evaluation</h2>
       <p class="sub">
-        Tick appropriately. Use <b>Not sure</b> when you didn’t observe clearly. This system is for growth and excellence, not blame.
+        Tick appropriately. Use <b>Not sure</b> when you didn’t observe clearly. This is for growth and excellence, not blame.
       </p>
     </section>
 
     <section class="grid">
       <div class="card">
         <h2>Service Details</h2>
-        <div class="muted">Keep it simple. Date is required.</div>
+        <div class="muted">Date is required.</div>
+
         <div style="margin-top:12px;">
           <label for="service_date">Service Date</label>
           <input id="service_date" type="date" required />
@@ -269,7 +313,7 @@
 
       <div class="card">
         <h2>Comments</h2>
-        <div class="muted">Short and specific feedback is the best fuel for improvement.</div>
+        <div class="muted">Short and specific feedback is most useful.</div>
 
         <div style="margin-top:12px;">
           <label for="what_went_well">What went well</label>
@@ -289,97 +333,36 @@
     <section class="card" style="margin-top:12px;">
       <h2>Vocalists Section</h2>
 
-      <div class="q">
-        <p>1. All the vocalists arrived on time (08:00am).</p>
-        <div class="opts" data-q="v1"></div>
-      </div>
-
-      <div class="q">
-        <p>2. The vocalists were smartly dressed and kept the pulpit clean.</p>
-        <div class="opts" data-q="v2"></div>
-      </div>
-
-      <div class="q">
-        <p>3. The leader of praise knew the songs well and sang on the given key.</p>
-        <div class="opts" data-q="v3"></div>
-      </div>
-
-      <div class="q">
-        <p>4. Backup vocals had clear harmonies/melodies and knew lyrics well.</p>
-        <div class="opts" data-q="v4"></div>
-      </div>
-
-      <div class="q">
-        <p>5. Stage movements/dance were uniform and well organized.</p>
-        <div class="opts" data-q="v5"></div>
-      </div>
-
-      <div class="q">
-        <p>6. Songs chosen aligned with the monthly theme.</p>
-        <div class="opts" data-q="v6"></div>
-      </div>
-
-      <div class="q">
-        <p>7. Worship leader led well with correct melodies and lyrics.</p>
-        <div class="opts" data-q="v7"></div>
-      </div>
-
-      <div class="q">
-        <p>8. People organized themselves well on stage (stage uniformity).</p>
-        <div class="opts" data-q="v8"></div>
-      </div>
+      <div class="q"><p>1. All the vocalists arrived on time (08:00am).</p><div class="opts" data-q="v1"></div></div>
+      <div class="q"><p>2. The vocalists were smartly dressed and kept the pulpit clean.</p><div class="opts" data-q="v2"></div></div>
+      <div class="q"><p>3. The leader of praise knew the songs well and sang on the given key.</p><div class="opts" data-q="v3"></div></div>
+      <div class="q"><p>4. Backup vocals had clear harmonies/melodies and knew lyrics well.</p><div class="opts" data-q="v4"></div></div>
+      <div class="q"><p>5. Stage movements/dance were uniform and well organized.</p><div class="opts" data-q="v5"></div></div>
+      <div class="q"><p>6. Songs chosen aligned with the monthly theme.</p><div class="opts" data-q="v6"></div></div>
+      <div class="q"><p>7. Worship leader led well with correct melodies and lyrics.</p><div class="opts" data-q="v7"></div></div>
+      <div class="q"><p>8. People organized themselves well on stage (stage uniformity).</p><div class="opts" data-q="v8"></div></div>
     </section>
 
     <section class="card">
       <h2>Instrumentalists Section</h2>
 
-      <div class="q">
-        <p>1. Instrumentalists arrived on time.</p>
-        <div class="opts" data-q="i1"></div>
-      </div>
-
-      <div class="q">
-        <p>2. Instrumentalists dressed in the communicated uniform.</p>
-        <div class="opts" data-q="i2"></div>
-      </div>
-
-      <div class="q">
-        <p>3. Instrumentalists played all songs well as expected.</p>
-        <div class="opts" data-q="i3"></div>
-      </div>
-
-      <div class="q">
-        <p>4. Instrumentalists coordinated well among themselves.</p>
-        <div class="opts" data-q="i4"></div>
-      </div>
+      <div class="q"><p>1. Instrumentalists arrived on time.</p><div class="opts" data-q="i1"></div></div>
+      <div class="q"><p>2. Instrumentalists dressed in the communicated uniform.</p><div class="opts" data-q="i2"></div></div>
+      <div class="q"><p>3. Instrumentalists played all songs well as expected.</p><div class="opts" data-q="i3"></div></div>
+      <div class="q"><p>4. Instrumentalists coordinated well among themselves.</p><div class="opts" data-q="i4"></div></div>
     </section>
 
     <section class="card">
       <h2>Sound System / Technical</h2>
 
-      <div class="q">
-        <p>1. The sound was appropriate and clear.</p>
-        <div class="opts" data-q="s1"></div>
-      </div>
-
-      <div class="q">
-        <p>2. All microphones were on and projected the anticipated sound.</p>
-        <div class="opts" data-q="s2"></div>
-      </div>
-
-      <div class="q">
-        <p>3. Singers respected and correctly used in-ear monitors.</p>
-        <div class="opts" data-q="s3"></div>
-      </div>
+      <div class="q"><p>1. The sound was appropriate and clear.</p><div class="opts" data-q="s1"></div></div>
+      <div class="q"><p>2. All microphones were on and projected the anticipated sound.</p><div class="opts" data-q="s2"></div></div>
+      <div class="q"><p>3. Singers respected and correctly used in-ear monitors.</p><div class="opts" data-q="s3"></div></div>
     </section>
 
     <footer>
-      <div>
-        Built for Kasenge Miracle Centre Church • Alimunze Music Ministry.
-      </div>
-      <div>
-        <a href="/">Home</a> • <a href="/admin.html">Admin</a>
-      </div>
+      <div>Built for Kasenge Miracle Centre Church • Alimunze Music Ministry.</div>
+      <div><a href="/">Home</a> • <a href="/admin.html">Admin</a></div>
     </footer>
 
   </div>
@@ -395,6 +378,14 @@
   </div>
 
   <script>
+    // Mobile menu
+    const hamburger = document.getElementById("hamburger");
+    const menuPanel = document.getElementById("menuPanel");
+    hamburger.addEventListener("click", () => {
+      const isOpen = menuPanel.classList.toggle("show");
+      hamburger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    });
+
     const CHOICES = ["Yes", "No", "Not sure"];
 
     function renderChoices() {
@@ -404,7 +395,7 @@
           const id = `${key}_${c.replace(/\s/g,'_')}`;
           return `
             <label class="opt" for="${id}">
-              <input type="radio" id="${id}" name="${key}" value="${c}" />
+              <input type="radio" id="${id}" name="${key}" value="${c}">
               ${c}
             </label>
           `;
@@ -413,7 +404,7 @@
     }
 
     function getRadioValue(name) {
-      const el = document.querySelector(\`input[name="\${name}"]:checked\`);
+      const el = document.querySelector(`input[name="${name}"]:checked`);
       return el ? el.value : "Not sure";
     }
 
@@ -422,7 +413,7 @@
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const dd = String(d.getDate()).padStart(2, "0");
-      return \`\${yyyy}-\${mm}-\${dd}\`;
+      return `${yyyy}-${mm}-${dd}`;
     }
 
     function setStatus(text, mode) {
@@ -431,18 +422,24 @@
       el.textContent = text;
     }
 
-    function resetForm() {
+    function resetForm(keepServiceDetails = true) {
       document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
       document.getElementById("what_went_well").value = "";
       document.getElementById("areas_to_improve").value = "";
       document.getElementById("suggestions_next_service").value = "";
-      setStatus("Reset complete.", "");
+      if (!keepServiceDetails) {
+        document.getElementById("service_name").value = "";
+        document.getElementById("evaluator_name").value = "";
+        document.getElementById("service_date").value = todayISO();
+      }
+      setStatus("Ready.", "");
     }
 
+    // Initialize
     renderChoices();
     document.getElementById("service_date").value = todayISO();
 
-    document.getElementById("resetBtn").addEventListener("click", resetForm);
+    document.getElementById("resetBtn").addEventListener("click", () => resetForm(true));
 
     document.getElementById("submitBtn").addEventListener("click", async () => {
       const submitBtn = document.getElementById("submitBtn");
@@ -495,8 +492,11 @@
 
         if (res.ok && data.ok) {
           setStatus(`Saved ✅ (ID: ${data.id})`, "ok");
-          // keep service details, reset other fields for faster next entry
-          resetForm();
+          // Reset the ratings + comments for the next evaluation, keep service details
+          document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+          document.getElementById("what_went_well").value = "";
+          document.getElementById("areas_to_improve").value = "";
+          document.getElementById("suggestions_next_service").value = "";
         } else {
           setStatus(`Failed ❌ ${data.error || ("HTTP " + res.status)}`, "bad");
         }
