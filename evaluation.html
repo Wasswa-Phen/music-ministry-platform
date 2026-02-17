@@ -3,80 +3,290 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sunday Music Evaluation | Music Ministry Platform</title>
+  <title>Sunday Evaluation | Alimunze Music Ministry</title>
   <meta name="description" content="Sunday Music Department evaluation form for continuous improvement in vocalists, instrumentalists, and sound team." />
+  <meta name="theme-color" content="#4B2BFF" />
+
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #0b0f1a; color: #e8ecff; }
-    header { padding: 18px 16px; border-bottom: 1px solid rgba(255,255,255,0.08); background: #0b0f1a; position: sticky; top: 0; }
-    header h1 { margin: 0; font-size: 18px; }
-    header p { margin: 6px 0 0; font-size: 13px; opacity: 0.85; }
-
-    main { max-width: 920px; margin: 0 auto; padding: 16px; }
-    .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); border-radius: 14px; padding: 14px; margin: 12px 0; }
-    .card h2 { margin: 0 0 10px; font-size: 16px; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-    @media (min-width: 760px) { .grid.two { grid-template-columns: 1fr 1fr; } }
-
-    label { display: block; font-size: 13px; margin-bottom: 6px; opacity: 0.95; }
-    input, select, textarea {
-      width: 100%; box-sizing: border-box; border-radius: 10px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(0,0,0,0.25); color: #e8ecff;
-      padding: 10px; outline: none;
+    :root{
+      --bg:#070A12;
+      --panel:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.10);
+      --text:#EAF0FF;
+      --muted:rgba(234,240,255,.78);
+      --brand:#4B2BFF;
+      --brand2:#8A7CFF;
+      --ok:#7dffb5;
+      --bad:#ff7d7d;
+      --shadow: 0 18px 50px rgba(0,0,0,.45);
+      --radius: 18px;
     }
-    textarea { min-height: 90px; resize: vertical; }
 
-    .q { padding: 10px; border-radius: 12px; background: rgba(0,0,0,0.20); border: 1px solid rgba(255,255,255,0.08); }
-    .q p { margin: 0 0 10px; font-size: 14px; line-height: 1.35; }
-    .opts { display: flex; gap: 10px; flex-wrap: wrap; }
-    .opt {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 8px 10px; border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(255,255,255,0.06);
-      cursor: pointer; user-select: none;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(75,43,255,.30), transparent 60%),
+        radial-gradient(900px 600px at 85% 20%, rgba(138,124,255,.22), transparent 60%),
+        var(--bg);
+      min-height:100vh;
+      overflow-x:hidden;
     }
-    .opt input { width: auto; }
-    .actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-    button {
-      border: 0; border-radius: 12px; padding: 12px 14px;
-      background: #4B2BFF; color: white; font-weight: 700;
-      cursor: pointer;
+    a{color:inherit; text-decoration:none}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;}
+
+    .wrap{max-width:1100px; margin:0 auto; padding:20px 16px 90px;}
+
+    /* Top bar */
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      background:rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      position: sticky; top: 10px; z-index: 10;
     }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .status { font-size: 13px; opacity: 0.9; }
-    .success { color: #7dffb5; }
-    .error { color: #ff7d7d; }
-    footer { padding: 18px 16px; font-size: 12px; opacity: 0.75; text-align: center; }
-    a { color: #b9c3ff; }
+    .brand{display:flex; gap:10px; align-items:center;}
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 16px 40px rgba(75,43,255,.25);
+      position:relative; overflow:hidden;
+    }
+    .logo:after{
+      content:"";
+      position:absolute; inset:-35%;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), transparent 55%);
+      transform: rotate(25deg);
+    }
+    .brand h1{margin:0; font-size:14px; letter-spacing:.2px}
+    .brand p{margin:2px 0 0; font-size:12px; color:var(--muted)}
+    .navlinks{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.06);
+      font-weight:800;
+      cursor:pointer;
+      transition: transform .15s ease, border-color .15s ease;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); border-color: rgba(255,255,255,.22);}
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 18px 40px rgba(75,43,255,.22);
+    }
+
+    /* Header */
+    .hero{
+      margin-top:16px;
+      border:1px solid var(--stroke);
+      border-radius: 22px;
+      padding:18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(900px 300px at 25% 0%, rgba(75,43,255,.30), transparent 60%),
+        radial-gradient(700px 260px at 85% 25%, rgba(138,124,255,.22), transparent 60%);
+      opacity:.85;
+      pointer-events:none;
+    }
+    .hero > *{position:relative}
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      padding:7px 10px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:999px;
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size:12px;
+    }
+    .headline{
+      margin:12px 0 0;
+      font-size:24px;
+      letter-spacing:-.4px;
+      line-height:1.12;
+    }
+    @media (min-width: 760px){ .headline{font-size:32px;} }
+    .sub{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.65;
+      max-width: 70ch;
+    }
+
+    /* Layout */
+    .grid{
+      margin-top:14px;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    @media (min-width: 980px){
+      .grid{grid-template-columns: 1fr 1fr;}
+    }
+
+    .card{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.22);
+      padding:14px;
+    }
+    .card h2{margin:0 0 10px; font-size:15px;}
+    .muted{color:var(--muted); font-size:12px;}
+
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px;}
+    input, textarea{
+      width:100%;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px;
+      outline:none;
+    }
+    textarea{min-height:92px; resize:vertical;}
+
+    .q{
+      padding:12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      margin:10px 0;
+    }
+    .q p{
+      margin:0 0 10px;
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .opts{display:flex; gap:10px; flex-wrap:wrap;}
+    .opt{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      cursor:pointer;
+      user-select:none;
+    }
+    .opt input{width:auto; margin:0}
+
+    /* Sticky submit bar (mobile-first) */
+    .submitBar{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      padding:12px 16px;
+      background: rgba(0,0,0,.50);
+      border-top: 1px solid rgba(255,255,255,.10);
+      backdrop-filter: blur(12px);
+    }
+    .submitInner{
+      max-width:1100px;
+      margin:0 auto;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .status{font-size:12px; color:var(--muted);}
+    .status.ok{color:var(--ok);}
+    .status.bad{color:var(--bad);}
+    .rightActions{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+    .btnTiny{padding:9px 10px; font-size:12px;}
+
+    footer{
+      margin-top:14px;
+      padding:14px;
+      border:1px solid var(--stroke);
+      border-radius: 16px;
+      background: rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:12px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+    footer a{color:#c3ccff; text-decoration:underline; text-underline-offset:2px}
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>Sunday Music Department Evaluation</h1>
-    <p>Tick appropriately. This supports growth, excellence, and consistent worship flow.</p>
-  </header>
+  <div class="wrap">
 
-  <main>
-    <form id="evalForm" class="card">
-      <h2>Service Details</h2>
-      <div class="grid two">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
         <div>
+          <h1>Sunday Evaluation</h1>
+          <p>Alimunze • Kasenge Miracle Centre Church</p>
+        </div>
+      </div>
+      <div class="navlinks">
+        <a class="btn btnTiny" href="/">Home</a>
+        <a class="btn btnTiny" href="/admin.html">Admin</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <span class="kicker">Capture • Review • Improve</span>
+      <h2 class="headline">Sunday Music Department Evaluation</h2>
+      <p class="sub">
+        Tick appropriately. Use <b>Not sure</b> when you didn’t observe clearly. This system is for growth and excellence, not blame.
+      </p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Service Details</h2>
+        <div class="muted">Keep it simple. Date is required.</div>
+        <div style="margin-top:12px;">
           <label for="service_date">Service Date</label>
-          <input id="service_date" name="service_date" type="date" required />
+          <input id="service_date" type="date" required />
         </div>
-        <div>
+        <div style="margin-top:10px;">
           <label for="service_name">Service Name (optional)</label>
-          <input id="service_name" name="service_name" placeholder="English Service / Luganda Service / Youth Service..." />
+          <input id="service_name" placeholder="English Service / Luganda Service / Youth..." />
+        </div>
+        <div style="margin-top:10px;">
+          <label for="evaluator_name">Evaluator Name (optional)</label>
+          <input id="evaluator_name" placeholder="Name (optional)" />
         </div>
       </div>
-      <div style="margin-top:10px;">
-        <label for="evaluator_name">Evaluator Name (optional)</label>
-        <input id="evaluator_name" name="evaluator_name" placeholder="Name (optional)" />
-      </div>
-    </form>
 
-    <section class="card">
+      <div class="card">
+        <h2>Comments</h2>
+        <div class="muted">Short and specific feedback is the best fuel for improvement.</div>
+
+        <div style="margin-top:12px;">
+          <label for="what_went_well">What went well</label>
+          <textarea id="what_went_well" placeholder="Highlights, strengths, positive moments..."></textarea>
+        </div>
+        <div style="margin-top:10px;">
+          <label for="areas_to_improve">Areas to improve</label>
+          <textarea id="areas_to_improve" placeholder="Gaps, issues, what needs attention..."></textarea>
+        </div>
+        <div style="margin-top:10px;">
+          <label for="suggestions_next_service">Suggestions for next service</label>
+          <textarea id="suggestions_next_service" placeholder="Action steps, training needs, planning notes..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:12px;">
       <h2>Vocalists Section</h2>
 
       <div class="q">
@@ -90,27 +300,27 @@
       </div>
 
       <div class="q">
-        <p>3. The leader of praise knew very well the songs and rightly sang on the given key.</p>
+        <p>3. The leader of praise knew the songs well and sang on the given key.</p>
         <div class="opts" data-q="v3"></div>
       </div>
 
       <div class="q">
-        <p>4. The backup sounded well with clear harmonies and melodies and knew the lyrics well.</p>
+        <p>4. Backup vocals had clear harmonies/melodies and knew lyrics well.</p>
         <div class="opts" data-q="v4"></div>
       </div>
 
       <div class="q">
-        <p>5. The dance movements on the stage were uniform and well organized.</p>
+        <p>5. Stage movements/dance were uniform and well organized.</p>
         <div class="opts" data-q="v5"></div>
       </div>
 
       <div class="q">
-        <p>6. The songs chosen were in line with our monthly theme.</p>
+        <p>6. Songs chosen aligned with the monthly theme.</p>
         <div class="opts" data-q="v6"></div>
       </div>
 
       <div class="q">
-        <p>7. The worship leader led well, knew the songs, and maintained right melodies and lyrics.</p>
+        <p>7. Worship leader led well with correct melodies and lyrics.</p>
         <div class="opts" data-q="v7"></div>
       </div>
 
@@ -129,17 +339,17 @@
       </div>
 
       <div class="q">
-        <p>2. Instrumentalists were smartly dressed in the uniform communicated.</p>
+        <p>2. Instrumentalists dressed in the communicated uniform.</p>
         <div class="opts" data-q="i2"></div>
       </div>
 
       <div class="q">
-        <p>3. The instrumentalists played all songs well as expected.</p>
+        <p>3. Instrumentalists played all songs well as expected.</p>
         <div class="opts" data-q="i3"></div>
       </div>
 
       <div class="q">
-        <p>4. They coordinated well among themselves.</p>
+        <p>4. Instrumentalists coordinated well among themselves.</p>
         <div class="opts" data-q="i4"></div>
       </div>
     </section>
@@ -148,7 +358,7 @@
       <h2>Sound System / Technical</h2>
 
       <div class="q">
-        <p>1. The sound was appropriate and good.</p>
+        <p>1. The sound was appropriate and clear.</p>
         <div class="opts" data-q="s1"></div>
       </div>
 
@@ -158,41 +368,31 @@
       </div>
 
       <div class="q">
-        <p>3. The singers respected the in-ear monitors and correctly used them.</p>
+        <p>3. Singers respected and correctly used in-ear monitors.</p>
         <div class="opts" data-q="s3"></div>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Comments</h2>
-      <div class="grid">
-        <div>
-          <label for="what_went_well">What went well</label>
-          <textarea id="what_went_well" placeholder="Highlights, strengths, positive moments..."></textarea>
-        </div>
-        <div>
-          <label for="areas_to_improve">Areas to improve</label>
-          <textarea id="areas_to_improve" placeholder="Gaps, issues, what needs attention..."></textarea>
-        </div>
-        <div>
-          <label for="suggestions_next_service">Suggestions for next service</label>
-          <textarea id="suggestions_next_service" placeholder="Action steps, training needs, planning notes..."></textarea>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <div class="actions">
-        <button id="submitBtn" type="button">Submit Evaluation</button>
-        <span id="status" class="status"></span>
-      </div>
-      <p class="status">Tip: Use “Not sure” when you couldn’t observe clearly. The goal is improvement, not blame.</p>
-    </section>
-
     <footer>
-      Music Ministry Platform • MVP • Built for continuous growth and Kingdom excellence.
+      <div>
+        Built for Kasenge Miracle Centre Church • Alimunze Music Ministry.
+      </div>
+      <div>
+        <a href="/">Home</a> • <a href="/admin.html">Admin</a>
+      </div>
     </footer>
-  </main>
+
+  </div>
+
+  <div class="submitBar">
+    <div class="submitInner">
+      <span id="status" class="status">Ready.</span>
+      <div class="rightActions">
+        <button id="resetBtn" class="btn btnTiny" type="button">Reset</button>
+        <button id="submitBtn" class="btn btnPrimary" type="button">Submit Evaluation</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const CHOICES = ["Yes", "No", "Not sure"];
@@ -213,7 +413,7 @@
     }
 
     function getRadioValue(name) {
-      const el = document.querySelector(`input[name="${name}"]:checked`);
+      const el = document.querySelector(\`input[name="\${name}"]:checked\`);
       return el ? el.value : "Not sure";
     }
 
@@ -222,22 +422,42 @@
       const yyyy = d.getFullYear();
       const mm = String(d.getMonth() + 1).padStart(2, "0");
       const dd = String(d.getDate()).padStart(2, "0");
-      return `${yyyy}-${mm}-${dd}`;
+      return \`\${yyyy}-\${mm}-\${dd}\`;
+    }
+
+    function setStatus(text, mode) {
+      const el = document.getElementById("status");
+      el.className = "status" + (mode ? " " + mode : "");
+      el.textContent = text;
+    }
+
+    function resetForm() {
+      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      document.getElementById("what_went_well").value = "";
+      document.getElementById("areas_to_improve").value = "";
+      document.getElementById("suggestions_next_service").value = "";
+      setStatus("Reset complete.", "");
     }
 
     renderChoices();
     document.getElementById("service_date").value = todayISO();
 
-    const submitBtn = document.getElementById("submitBtn");
-    const statusEl = document.getElementById("status");
+    document.getElementById("resetBtn").addEventListener("click", resetForm);
 
-    submitBtn.addEventListener("click", async () => {
-      statusEl.className = "status";
-      statusEl.textContent = "Submitting...";
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const submitBtn = document.getElementById("submitBtn");
+      const service_date = document.getElementById("service_date").value.trim();
+
+      if (!service_date) {
+        setStatus("Service date is required.", "bad");
+        return;
+      }
+
+      setStatus("Submitting...", "");
       submitBtn.disabled = true;
 
       const payload = {
-        service_date: document.getElementById("service_date").value,
+        service_date,
         service_name: document.getElementById("service_name").value.trim(),
         evaluator_name: document.getElementById("evaluator_name").value.trim(),
 
@@ -274,18 +494,14 @@
         const data = await res.json().catch(() => ({}));
 
         if (res.ok && data.ok) {
-          statusEl.classList.add("success");
-          statusEl.textContent = `Saved ✅ (ID: ${data.id})`;
-
-          // Optional: reset radios
-          document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+          setStatus(`Saved ✅ (ID: ${data.id})`, "ok");
+          // keep service details, reset other fields for faster next entry
+          resetForm();
         } else {
-          statusEl.classList.add("error");
-          statusEl.textContent = `Failed ❌ ${data.error || ("HTTP " + res.status)}`;
+          setStatus(`Failed ❌ ${data.error || ("HTTP " + res.status)}`, "bad");
         }
       } catch (e) {
-        statusEl.classList.add("error");
-        statusEl.textContent = "Network error ❌";
+        setStatus("Network error ❌", "bad");
       } finally {
         submitBtn.disabled = false;
       }
